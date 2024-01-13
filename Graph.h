@@ -55,7 +55,7 @@ private:
 				int v = q.front();
 				q.pop();
 				for (const Arc& arc : Lgraph[v]) {
-					if (!visited[arc.to] && distance[arc.to] > distance[v] + arc.weight) { // если вершину еще не посещали или посещали более долгим путем
+					if (!visited[arc.to] || distance[arc.to] > distance[v] + arc.weight) { // если вершину еще не посещали или посещали более долгим путем
 						distance[arc.to] = distance[v] + arc.weight;
 						paths[arc.to] = paths[v] + " " + to_string(arc.to);
 						visited[arc.to] = true;
@@ -133,11 +133,11 @@ void Graph<WeightType>::Task() {
 	if (exstr.empty()) {
 		throw exception("ѕустой граф");
 	}
-	//for (const pair<int, pair<WeightType, string>>& vertex : exstr) {
-	//	cout << vertex.first;
-	//	cout << " " << vertex.second.first << ": " << vertex.second.second;
-	//	cout << endl;
-	//}
+	for (const pair<int, pair<WeightType, string>>& vertex : exstr) {
+		cout << vertex.first;
+		cout << " " << vertex.second.first << ": " << vertex.second.second;
+		cout << endl;
+	}
 	pair<WeightType, string> radius = min_element( // радиус Ц минимальный эксцентриситет в графе
 		exstr.begin(), exstr.end(),
 		[](const pair<int, pair<WeightType, string>>& p1, const pair<int, pair<WeightType, string>>& p2) {return p1.second.first < p2.second.first; })->second;
