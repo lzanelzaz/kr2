@@ -10,9 +10,9 @@ using namespace std;
 
 int main() {
 	setlocale(LC_ALL, "Russian");
-	Graph<int, int> g = Graph<int, int>();
+	Graph<int> g = Graph<int>();
 	int n;
-	while (1) {
+	while (true) {
 		cout << endl << "Меню. Выберите действие:" << endl << endl;
 		cout << "1. Вставка" << endl;
 		cout << "2. Удаление" << endl;
@@ -70,26 +70,26 @@ int main() {
 				break;
 			}
 			case 9: {
+				g.Insert(0, 1);
+				g.SetEdge(0, 1, 1);
+
 				g.Insert(1, 2);
 				g.SetEdge(1, 2, 2);
 
-				g.Insert(1, 4);
-				g.SetEdge(1, 4, 1);
+				g.Insert(2, 3);
+				g.SetEdge(2, 3, 2);
 
-				g.Insert(2, 5);
-				g.SetEdge(2, 5, 3);
+				g.Insert(3, 2);
+				g.SetEdge(3, 2, 3);
 
-				g.Insert(3, 6);
-				g.SetEdge(3, 6, 1);
+				g.Insert(3, 1);
+				g.SetEdge(3, 1, 1);
 
-				g.Insert(3, 5);
-				g.SetEdge(3, 5, 4);
+				g.Insert(4, 3);
+				g.SetEdge(4, 3, 5);
 
-				g.Insert(4, 2);
-				g.SetEdge(4, 2, 10);
-
-				g.Insert(4, 5);
-				g.SetEdge(4, 5, 2);
+				g.Insert(2, 4);
+				g.SetEdge(2, 4, 4);
 
 				break;
 			}
