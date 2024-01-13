@@ -33,9 +33,6 @@ int main() {
 				int v1, v2;
 				cin >> v1 >> v2;
 				g.Insert(v1, v2);
-				g.Insert(v2, v1);
-				g.SetEdge(v1, v2, 1);
-				g.SetEdge(v2, v1,1);
 				break;
 			}
 			case 2: {
