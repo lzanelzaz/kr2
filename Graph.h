@@ -65,7 +65,7 @@ private:
 			}
 			for (const pair<int, const forward_list<Arc>>& vert : Lgraph) {
 				const int& currentVert = vert.first;
-				if (!exstrisitetsForGraph.count(currentVert) || exstrisitetsForGraph[currentVert].first < distance[currentVert]) {
+				if (!exstrisitetsForGraph.count(currentVert) || exstrisitetsForGraph[currentVert].first < distance[currentVert]) { //  максимальное значение в каждом столбце
 					exstrisitetsForGraph[currentVert] = make_pair(distance[currentVert], paths[currentVert]);
 				}
 			}
@@ -133,11 +133,11 @@ void Graph<WeightType>::Task() {
 	if (exstr.empty()) {
 		throw exception("ѕустой граф");
 	}
-	for (const pair<int, pair<WeightType, string>>& vertex : exstr) {
-		cout << vertex.first;
-		cout << " " << vertex.second.first << ": " << vertex.second.second;
-		cout << endl;
-	}
+	//for (const pair<int, pair<WeightType, string>>& vertex : exstr) {
+	//	cout << vertex.first;
+	//	cout << " " << vertex.second.first << ": " << vertex.second.second;
+	//	cout << endl;
+	//}
 	pair<WeightType, string> radius = min_element( // радиус Ц минимальный эксцентриситет в графе
 		exstr.begin(), exstr.end(),
 		[](const pair<int, pair<WeightType, string>>& p1, const pair<int, pair<WeightType, string>>& p2) {return p1.second.first < p2.second.first; })->second;
