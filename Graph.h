@@ -1,5 +1,3 @@
-#pragma once
-
 #include <iostream>
 #include <forward_list>
 #include <queue>
@@ -18,7 +16,7 @@ private:
 	};
 
 	size_t e = 0; // Количество ребер
-	size_t v = 0;
+	size_t v = 0; // Количество вершин
 
 	vector<forward_list<Arc>> Lgraph;
 
@@ -67,7 +65,6 @@ private:
 		return exstrisitetsForGraph;
 	}
 public:
-	Graph() {}
 	Graph(size_t v);
 
 	size_t V(); // опрос числа вершин в графе

@@ -10,7 +10,7 @@ using namespace std;
 
 int main() {
 	setlocale(LC_ALL, "Russian");
-	Graph<int> g = Graph<int>();
+	Graph<int> g = Graph<int>(0);
 	int n;
 	while (true) {
 		cout << endl << "Меню. Выберите действие:" << endl << endl;
