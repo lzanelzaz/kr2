@@ -14,6 +14,7 @@ int main() {
 	int n;
 	while (true) {
 		cout << endl << "Меню. Выберите действие:" << endl << endl;
+		cout << "0. Создать граф" << endl;
 		cout << "1. Вставка" << endl;
 		cout << "2. Удаление" << endl;
 		cout << "3. Число вершин" << endl;
@@ -21,24 +22,28 @@ int main() {
 		cout << "5. Опрос наличия ребра" << endl;
 		cout << "6. Задание параметров ребра" << endl;
 		cout << "7. Вывод структуры графа на экран" << endl;
-		cout << "8. Определение радиуса и определения списка вершин для соответствующего радиусу пути на основе алгоритма Дейкстры" << endl;
-		cout << "9. Сгенерировать Взвешенный орграф" << endl;
-
+		cout << "8. Определение центра и списка вершин для соответствующего радиусу пути на основе алгоритма Дейкстры" << endl;
 		cout << endl;
 		cin >> n;
 		cout << endl;
 		try {
 			switch (n) {
+			case 0: {
+				int v;
+				cin >> v;
+				g = Graph<int>(v);
+				break;
+			}
 			case 1: {
 				int v1, v2;
 				cin >> v1 >> v2;
-				g.Insert(v1, v2);
+				cout << g.Insert(v1, v2) << endl;
 				break;
 			}
 			case 2: {
 				int v1, v2;
 				cin >> v1 >> v2;
-				g.Delete(v1, v2);
+				cout << g.Delete(v1, v2) << endl;
 				break;
 			}
 			case 3: {
@@ -58,7 +63,7 @@ int main() {
 			case 6: {
 				int v1, v2, weight;
 				cin >> v1 >> v2 >> weight;
-				g.SetEdge(v1, v2, weight);
+				cout << g.SetEdge(v1, v2, weight) << endl;
 				break;
 			}
 			case 7: {
@@ -66,31 +71,12 @@ int main() {
 				break;
 			}
 			case 8: {
-				g.Task();
-				break;
-			}
-			case 9: {
-				g.Insert(0, 1);
-				g.SetEdge(0, 1, 1);
-
-				g.Insert(1, 2);
-				g.SetEdge(1, 2, 2);
-
-				g.Insert(2, 3);
-				g.SetEdge(2, 3, 2);
-
-				g.Insert(3, 2);
-				g.SetEdge(3, 2, 3);
-
-				g.Insert(3, 1);
-				g.SetEdge(3, 1, 1);
-
-				g.Insert(4, 3);
-				g.SetEdge(4, 3, 5);
-
-				g.Insert(2, 4);
-				g.SetEdge(2, 4, 4);
-
+				vector<int> radius = g.Task();
+				cout << "Центр: " << *radius.rbegin() << endl;
+				cout << "Путь:";
+				for (const int& vertex : radius) {
+					cout << " " << vertex;
+				}
 				break;
 			}
 			default: {

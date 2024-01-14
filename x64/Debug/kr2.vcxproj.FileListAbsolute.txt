@@ -1,3 +1,4 @@
 D:\НГТУ\5 сем\алгоритмы\kr2\x64\Debug\kr2.exe
 D:\алгоритмы\kr2\x64\Debug\kr2.exe
 C:\Users\lzane\Desktop\kr2\x64\Debug\kr2.exe
+C:\Users\lz\Desktop\kr2\x64\Debug\kr2.exe

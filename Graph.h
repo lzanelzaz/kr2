@@ -1,8 +1,6 @@
 #pragma once
 
 #include <iostream>
-#include <string>
-#include <map>
 #include <forward_list>
 #include <queue>
 
@@ -20,11 +18,12 @@ private:
 	};
 
 	size_t e = 0; // Количество ребер
+	size_t v = 0;
 
-	map<int, forward_list<Arc>> Lgraph;
+	vector<forward_list<Arc>> Lgraph;
 
 	Arc* findArc(int v1, int v2) { // Поиск ребра
-		if (!Lgraph.count(v1)) { // Такой вершины нет
+		if (Lgraph.size() <= v1) { // Такой вершины нет
 			return nullptr;
 		}
 		forward_list<Arc>& vertex = Lgraph[v1];
@@ -35,21 +34,16 @@ private:
 		return &(*iter);
 	}
 
-	map<int, pair<WeightType, string>> exstrisitetsForGraph() { // Поиск эксцентриситетов взвешенного графа
-		map<int, pair<WeightType, string>> exstrisitetsForGraph;
-		for (const pair<int, forward_list<Arc>>& vertex : Lgraph) { // Проходимся по всем вершинам
-			const int& from = vertex.first; // рассматриваемая вершина
+	vector<pair<WeightType, vector<int>>> exstrisitetsForGraph() { // Поиск эксцентриситетов взвешенного графа
+		vector<pair<WeightType, vector<int>>> exstrisitetsForGraph(v);
+		for (int from = 0; from < Lgraph.size(); from++) { // Проходимся по всем вершинам
 			queue<int> q;
-			map<int, WeightType> distance; // максимальное расстояние до вершин
-			map<int, string> paths; // путь с максимальным расстоянием до вершин
-			map<int, bool> visited;
-			for (const pair<int, const forward_list<Arc>>& vert : Lgraph) {
-				distance[vert.first] = numeric_limits<WeightType>::max();
-				visited[vert.first] = false;
-			}
+			vector<WeightType> distance(v, numeric_limits<WeightType>::max()); // максимальное расстояние до вершин
+			vector<vector<int>> paths(v); // путь с максимальным расстоянием до вершин
+			vector<bool> visited(v, false);
 			visited[from] = true;
 			distance[from] = {};
-			paths[from] = to_string(from);
+			paths[from].push_back(from);
 			q.push(from);
 			while (!q.empty()) { // Пока не пройдемся по всем вершинам
 				int v = q.front();
@@ -57,16 +51,16 @@ private:
 				for (const Arc& arc : Lgraph[v]) {
 					if (!visited[arc.to] || distance[arc.to] > distance[v] + arc.weight) { // если вершину еще не посещали или посещали более долгим путем
 						distance[arc.to] = distance[v] + arc.weight;
-						paths[arc.to] = paths[v] + " " + to_string(arc.to);
+						paths[arc.to] = paths[v];
+						paths[arc.to].push_back(arc.to);
 						visited[arc.to] = true;
 						q.push(arc.to);
 					}
 				}
 			}
-			for (const pair<int, const forward_list<Arc>>& vert : Lgraph) {
-				const int& currentVert = vert.first;
-				if (!exstrisitetsForGraph.count(currentVert) || exstrisitetsForGraph[currentVert].first < distance[currentVert]) { //  максимальное значение в каждом столбце
-					exstrisitetsForGraph[currentVert] = make_pair(distance[currentVert], paths[currentVert]);
+			for (int i = 0; i < Lgraph.size(); i++) {
+				if (exstrisitetsForGraph[i].first < distance[i]) { //  максимальное значение в каждом столбце
+					exstrisitetsForGraph[i] = make_pair(distance[i], paths[i]);
 				}
 			}
 		}
@@ -74,6 +68,7 @@ private:
 	}
 public:
 	Graph() {}
+	Graph(size_t v);
 
 	size_t V(); // опрос числа вершин в графе
 	size_t E(); // опрос числа ребер в графе
@@ -81,20 +76,17 @@ public:
 	bool Delete(int v1, int v2); //	удаление ребра, соединяющего вершины v1, v2
 	bool Edge(int v1, int v2); //	опрос наличия ребра, соединяющего вершины v1, v2
 	bool SetEdge(int v1, int v2, WeightType weight); //	задание параметров ребра
-	void Task(); //	решение задачи по варианту
+	vector<int> Task(); //	решение задачи по варианту
 	void Show(); // вывод графа на экран
 };
 
 template<class WeightType>
-bool Graph< WeightType>::Insert(int v1, int v2) {
-	if (v1 == v2 || Edge(v1, v2)) {
+bool Graph<WeightType>::Insert(int v1, int v2) {
+	if (Lgraph.size() <= v1 || v1 == v2 || Edge(v1, v2)) {
 		return false;
 	}
 	Lgraph[v1].push_front(Arc(v2));
 	e++;
-	if (!Lgraph.count(v2)) {
-		Lgraph[v2] = {};
-	}
 	return true;
 }
 
@@ -106,9 +98,6 @@ bool Graph<WeightType>::Delete(int v1, int v2) {
 	forward_list<Arc>& vertex = Lgraph[v1];
 	vertex.remove_if([&v2](Arc arc) { return arc.to == v2; });
 	e--;
-	if (vertex.empty()) {
-		Lgraph.erase(v1);
-	}
 	return true;
 }
 
@@ -128,28 +117,27 @@ bool Graph<WeightType>::SetEdge(int v1, int v2, WeightType weight) {
 }
 
 template<class WeightType>
-void Graph<WeightType>::Task() {
-	map<int, pair<WeightType, string>> exstr = exstrisitetsForGraph();
+vector<int> Graph<WeightType>::Task() {
+	vector<pair<WeightType, vector<int>>> exstr = exstrisitetsForGraph();
 	if (exstr.empty()) {
 		throw exception("Пустой граф");
 	}
-	//for (const pair<int, pair<WeightType, string>>& vertex : exstr) {
-	//	cout << vertex.first;
-	//	cout << " " << vertex.second.first << ": " << vertex.second.second;
+	//for (int from = 0; from < exstr.size(); from++) {
+	//	cout << from;
+	//	cout << " " << exstr[from].first << ": " << exstr[from].second;
 	//	cout << endl;
 	//}
-	pair<WeightType, string> radius = min_element( // радиус – минимальный эксцентриситет в графе
+	auto radius = min_element( // радиус – минимальный эксцентриситет в графе
 		exstr.begin(), exstr.end(),
-		[](const pair<int, pair<WeightType, string>>& p1, const pair<int, pair<WeightType, string>>& p2) {return p1.second.first < p2.second.first; })->second;
-	cout << "Pадиус: " << radius.first << endl;
-	cout << "Путь: " << radius.second << endl;
+		[](const pair<WeightType, vector<int>>& p1, const pair<WeightType, vector<int>>& p2) {return p1.first < p2.first; });
+	return radius->second;
 }
 
 template<class WeightType>
 void Graph<WeightType>::Show() {
-	for (const pair<int, const forward_list<Arc>>& vertex : Lgraph) {
-		cout << vertex.first;
-		for (const Arc& arc : vertex.second) {
+	for (int i = 0; i < Lgraph.size(); i++) {
+		cout << i;
+		for (const Arc& arc : Lgraph[i]) {
 			cout << " " << arc.to << "," << arc.weight;
 		}
 		cout << endl;
@@ -157,8 +145,15 @@ void Graph<WeightType>::Show() {
 }
 
 template<class WeightType>
+Graph<WeightType>::Graph(size_t v){
+	this->v = v;
+	Lgraph.clear();
+	Lgraph.resize(v, {});
+}
+
+template<class WeightType>
 size_t Graph<WeightType>::V() {
-	return Lgraph.size();
+	return v;
 }
 
 template<class WeightType>
